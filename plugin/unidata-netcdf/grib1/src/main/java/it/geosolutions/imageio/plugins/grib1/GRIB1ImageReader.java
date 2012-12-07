@@ -15,7 +15,7 @@
  */
 package it.geosolutions.imageio.plugins.grib1;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.BaseNetCDFImageReader;
 import it.geosolutions.imageio.plugins.netcdf.BaseVariableWrapper;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities;

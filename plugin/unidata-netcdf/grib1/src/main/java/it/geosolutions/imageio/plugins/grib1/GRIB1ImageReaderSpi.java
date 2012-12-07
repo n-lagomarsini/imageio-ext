@@ -15,15 +15,17 @@
  */
 package it.geosolutions.imageio.plugins.grib1;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReaderSpi;
+import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities;
 import it.geosolutions.imageio.stream.input.FileImageInputStreamExtImpl;
 
 import java.io.File;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import javax.imageio.ImageReader;
+import javax.imageio.spi.ImageReaderSpi;
 
 import ucar.nc2.NetcdfFile;
 
@@ -32,7 +34,10 @@ import ucar.nc2.NetcdfFile;
  * 
  * @author Daniele Romagnoli, GeoSolutions
  */
-public class GRIB1ImageReaderSpi extends BaseImageReaderSpi {
+public class GRIB1ImageReaderSpi extends ImageReaderSpi {
+    
+    private final static Logger LOGGER= Logger.getLogger(GRIB1ImageReaderSpi.class.toString());
+    
     static final String[] suffixes = { "grib", "grb" };
 
     static final String[] formatNames = { "GRIB1" };
@@ -70,13 +75,13 @@ public class GRIB1ImageReaderSpi extends BaseImageReaderSpi {
 
     public GRIB1ImageReaderSpi() {
         super(
-                vendorName,
+                NetCDFUtilities.vendorName,
                 version,
                 formatNames,
                 suffixes,
                 MIMETypes,
                 readerCN, // readerClassName
-                DIRECT_STANDARD_INPUT_TYPES,
+                NetCDFUtilities.DIRECT_STANDARD_INPUT_TYPES,
                 wSN, // writer Spi Names
                 supportsStandardStreamMetadataFormat,
                 nativeStreamMetadataFormatName,

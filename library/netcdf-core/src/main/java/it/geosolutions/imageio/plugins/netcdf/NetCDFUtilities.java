@@ -16,6 +16,7 @@
  */
 package it.geosolutions.imageio.plugins.netcdf;
 
+import it.geosolutions.imageio.stream.AccessibleStream;
 import it.geosolutions.imageio.stream.input.FileImageInputStreamExt;
 import it.geosolutions.imageio.stream.input.URIImageInputStream;
 import it.geosolutions.imageio.utilities.ImageIOUtilities;
@@ -23,6 +24,7 @@ import it.geosolutions.imageio.utilities.ImageIOUtilities;
 import java.awt.image.DataBuffer;
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
 import java.net.URL;
 import java.text.DateFormat;
 import java.text.Format;
@@ -37,6 +39,8 @@ import java.util.Set;
 import java.util.TimeZone;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.imageio.stream.ImageInputStream;
 
 import ucar.ma2.DataType;
 import ucar.ma2.Range;
@@ -107,6 +111,12 @@ public class NetCDFUtilities {
 	
     /** The LOGGER for this class. */
     private static final Logger LOGGER = Logger.getLogger(NetCDFUtilities.class.toString());
+
+    public final static String ATTRIBUTES_NODE = "Attributes";
+
+    public static final Class<?>[] DIRECT_STANDARD_INPUT_TYPES = new Class[] {AccessibleStream.class,ImageInputStream.class,File.class,URL.class,URI.class };
+
+    public static final String vendorName = "GeoSolutions";
     
     private NetCDFUtilities() {
     	

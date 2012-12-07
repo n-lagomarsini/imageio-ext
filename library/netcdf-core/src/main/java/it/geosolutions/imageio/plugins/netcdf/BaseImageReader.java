@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package it.geosolutions.imageio.ndplugin;
+package it.geosolutions.imageio.plugins.netcdf;
 
 import java.io.IOException;
 

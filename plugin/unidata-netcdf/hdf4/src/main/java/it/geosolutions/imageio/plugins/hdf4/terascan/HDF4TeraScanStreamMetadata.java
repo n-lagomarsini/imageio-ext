@@ -17,7 +17,7 @@
 package it.geosolutions.imageio.plugins.hdf4.terascan;
 
 import it.geosolutions.imageio.core.CoreCommonImageMetadata;
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.BaseNetCDFImageReader;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities.KeyValuePair;
 import it.geosolutions.imageio.utilities.Utilities;

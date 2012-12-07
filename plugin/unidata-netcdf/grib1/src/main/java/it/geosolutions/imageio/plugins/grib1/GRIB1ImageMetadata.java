@@ -16,10 +16,10 @@
 package it.geosolutions.imageio.plugins.grib1;
 
 import it.geosolutions.imageio.core.CoreCommonImageMetadata;
-import it.geosolutions.imageio.ndplugin.BaseImageMetadata;
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
 import it.geosolutions.imageio.plugins.grib1.GRIB1ImageReader.GribVariableWrapper;
 import it.geosolutions.imageio.plugins.grib1.GRIB1ImageReader.VerticalLevel;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageMetadata;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities.KeyValuePair;
 
 import java.io.IOException;

@@ -16,7 +16,6 @@
  */
 package it.geosolutions.imageio.plugins.hdf4;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReaderSpi;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities;
 import it.geosolutions.imageio.stream.input.FileImageInputStreamExtImpl;
 
@@ -28,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageReader;
+import javax.imageio.spi.ImageReaderSpi;
 
 import ucar.nc2.dataset.NetcdfDataset;
 import ucar.nc2.dataset.NetcdfDataset.Enhance;
@@ -38,7 +38,7 @@ import ucar.nc2.iosp.hdf4.H4iosp;
  * 
  * @author Daniele Romagnoli
  */
-public abstract class HDF4ImageReaderSpi extends BaseImageReaderSpi {
+public abstract class HDF4ImageReaderSpi extends ImageReaderSpi {
 
 	static{
 		NetcdfDataset.setDefaultEnhanceMode(EnumSet.of(Enhance.CoordSystems));
@@ -83,13 +83,13 @@ public abstract class HDF4ImageReaderSpi extends BaseImageReaderSpi {
 
     public HDF4ImageReaderSpi() {
         super(
-                vendorName,
+                NetCDFUtilities.vendorName,
                 version,
                 formatNames,
                 suffixes,
                 MIMETypes,
                 readerCN, // readerClassName
-                DIRECT_STANDARD_INPUT_TYPES,
+                NetCDFUtilities.DIRECT_STANDARD_INPUT_TYPES,
                 wSN, // writer Spi Names
                 supportsStandardStreamMetadataFormat,
                 nativeStreamMetadataFormatName,
@@ -107,13 +107,13 @@ public abstract class HDF4ImageReaderSpi extends BaseImageReaderSpi {
     }
 
     public HDF4ImageReaderSpi(final String readerCN) {
-    	super(vendorName,
+    	super(NetCDFUtilities.vendorName,
                 version,
                 formatNames,
                 suffixes,
                 MIMETypes,
                 readerCN, 
-                DIRECT_STANDARD_INPUT_TYPES,
+                NetCDFUtilities.DIRECT_STANDARD_INPUT_TYPES,
                 wSN, // writer Spi Names
                 supportsStandardStreamMetadataFormat,
                 nativeStreamMetadataFormatName,

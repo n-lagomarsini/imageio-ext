@@ -15,7 +15,7 @@
  */
 package it.geosolutions.imageio.plugins.grib1;
 
-import it.geosolutions.imageio.ndplugin.BaseImageMetadata;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageMetadata;
 import it.geosolutions.imageio.utilities.ImageIOUtilities;
 import it.geosolutions.resources.TestData;
 

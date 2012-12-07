@@ -14,7 +14,7 @@
  *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
  *    Lesser General Public License for more details.
  */
-package it.geosolutions.imageio.ndplugin;
+package it.geosolutions.imageio.plugins.netcdf;
 
 import it.geosolutions.imageio.core.CoreCommonImageMetadata;
 
@@ -36,8 +36,6 @@ import org.w3c.dom.Node;
  * @author Daniele Romagnoli, GeoSolutions.
  */
 public abstract class BaseImageMetadata extends CoreCommonImageMetadata {
-
-    public final static String ATTRIBUTES_NODE = "Attributes";
 
     protected final BaseImageReader imageReader;
 

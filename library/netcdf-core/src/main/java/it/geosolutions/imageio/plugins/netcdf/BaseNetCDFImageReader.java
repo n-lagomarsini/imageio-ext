@@ -16,16 +16,13 @@
  */
 package it.geosolutions.imageio.plugins.netcdf;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities.KeyValuePair;
 import it.geosolutions.imageio.stream.input.URIImageInputStream;
 import it.geosolutions.imageio.utilities.ImageIOUtilities;
-import it.geosolutions.imageio.utilities.Utilities;
 
 import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.awt.image.SampleModel;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Iterator;

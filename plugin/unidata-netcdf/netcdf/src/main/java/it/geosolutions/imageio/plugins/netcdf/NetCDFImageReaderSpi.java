@@ -16,7 +16,6 @@
  */
 package it.geosolutions.imageio.plugins.netcdf;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReaderSpi;
 import it.geosolutions.imageio.stream.input.FileImageInputStreamExtImpl;
 import it.geosolutions.imageio.stream.input.URIImageInputStream;
 
@@ -28,6 +27,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageReader;
+import javax.imageio.spi.ImageReaderSpi;
 
 import ucar.nc2.NetcdfFile;
 import ucar.nc2.dataset.NetcdfDataset;
@@ -38,7 +38,7 @@ import ucar.nc2.dataset.NetcdfDataset.Enhance;
  * 
  * @author Alessio Fabiani, GeoSolutions
  */
-public class NetCDFImageReaderSpi extends BaseImageReaderSpi {
+public class NetCDFImageReaderSpi extends ImageReaderSpi {
 
 	static{
 		NetcdfDataset.setDefaultEnhanceMode(EnumSet.of(Enhance.CoordSystems));
@@ -92,13 +92,13 @@ public class NetCDFImageReaderSpi extends BaseImageReaderSpi {
     /** Default Constructor * */
     public NetCDFImageReaderSpi() {
         super(
-                vendorName,
+                NetCDFUtilities.vendorName,
                 version,
                 formatNames,
                 suffixes,
                 MIMETypes,
                 readerCN, // readerClassName
-                DIRECT_STANDARD_INPUT_TYPES,
+                NetCDFUtilities.DIRECT_STANDARD_INPUT_TYPES,
                 wSN, // writer Spi Names
                 supportsStandardStreamMetadataFormat,
                 nativeStreamMetadataFormatName,

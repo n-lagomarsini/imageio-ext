@@ -17,9 +17,10 @@
 package it.geosolutions.imageio.plugins.hdf4.terascan;
 
 import it.geosolutions.imageio.core.CoreCommonImageMetadata;
-import it.geosolutions.imageio.ndplugin.BaseImageMetadata;
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageMetadata;
+import it.geosolutions.imageio.plugins.netcdf.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.BaseNetCDFImageReader;
+import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities.KeyValuePair;
 
 import java.io.IOException;
@@ -119,7 +120,7 @@ public class HDF4TeraScanImageMetadata extends BaseImageMetadata {
         //
         // ////////////////////////////////////////////////////////////////////
         if (this.additionalMetadata != null) {
-            IIOMetadataNode node = new IIOMetadataNode(ATTRIBUTES_NODE);
+            IIOMetadataNode node = new IIOMetadataNode(NetCDFUtilities.ATTRIBUTES_NODE);
 
             for (String key : this.additionalMetadata.keySet()) {
                 final String attributeValue = additionalMetadata.get(key);

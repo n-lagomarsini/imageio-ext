@@ -16,7 +16,6 @@
  */
 package it.geosolutions.imageio.plugins.netcdf;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities.CheckType;
 import it.geosolutions.imageio.utilities.ImageIOUtilities;
 

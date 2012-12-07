@@ -16,9 +16,8 @@
  */
 package it.geosolutions.imageio.plugins.netcdf;
 
-import it.geosolutions.imageio.ndplugin.BaseImageReader;
 import it.geosolutions.imageio.plugins.netcdf.NetCDFUtilities.KeyValuePair;
-import it.geosolutions.imageio.utilities.Utilities;
+import it.geosolutions.imageio.utilities.ImageIOUtilities;
 
 import java.io.IOException;
 
@@ -75,7 +74,7 @@ public class NetCDFStreamMetadata extends IIOMetadata {
                     // containing "\\". Therefore we replace that char
                     // //
                     if (attributeName.contains("\\"))
-                        attributeName = Utilities.adjustAttributeName(attributeName);
+                        attributeName = ImageIOUtilities.adjustAttributeName(attributeName);
                     node.setAttribute(attributeName, attributeValue);
                 }
             } catch (IOException e) {

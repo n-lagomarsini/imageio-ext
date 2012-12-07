@@ -32,13 +32,13 @@ public abstract class BaseVariableWrapper {
 
     private int tileHeight;
 
-	private int tileWidth;
+    private int tileWidth;
 
     private int rank;
     
     private int numBands;
     
-	private SampleModel sampleModel;
+    private SampleModel sampleModel;
 
     public void setSampleModel(SampleModel sampleModel) {
 		this.sampleModel = sampleModel;
