@@ -307,7 +307,7 @@ public final class BaseNetCDFImageReader extends BaseImageReader{
     Variable getVariableByName(final String varName) {
     	final List<Variable> varList = dataset.getVariables();
         for (Variable var : varList) {
-            if (var.getName().equals(varName))
+            if (var.getFullName().equals(varName))
                 return var;
         }
         return null;

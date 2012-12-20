@@ -13,10 +13,16 @@
   <name>GRIB1 - Direct Plugin</name>
   
   <dependencies>
-    <dependency>
+    <!-- dependency>
       <groupId>it.geosolutions</groupId>
       <artifactId>grib</artifactId>
       <version>6.0.18</version>
+    </dependency -->
+    <dependency>
+      <groupId>edu.ucar</groupId>
+      <artifactId>grib</artifactId>
+      <version>4.3.15</version>
     </dependency>
+
   </dependencies>
  </project>

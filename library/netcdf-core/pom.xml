@@ -32,14 +32,15 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>essi-unidata</groupId>
-      <artifactId>netcdf-java</artifactId>
+      <groupId>edu.ucar</groupId>
+      <artifactId>netcdf</artifactId>
+      <version>4.3.15</version>
     </dependency>
-     <dependency>
+     <!-- dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-log4j12</artifactId>
       <scope>runtime</scope>
-    </dependency>
+    </dependency -->
     <dependency>
     <!-- required to read files remotely over HTTP -->
       <groupId>commons-httpclient</groupId>

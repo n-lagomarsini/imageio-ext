@@ -233,7 +233,7 @@ public class GRIB1ImageMetadata extends BaseImageMetadata {
 //                pdsNode.setAttribute(PROD_TIME, wrapper.getTime(imageIndex));
 //                pdsNode.setAttribute(PROD_TIME_RANGE_INDICATOR, Integer.toString(directReader.getTimeRangeIndicator(imageIndex)));
                 
-                pdsNode.setAttribute(PROD_DEFINITION_TYPE,wrapper.getProductDefinitionType());
+//                pdsNode.setAttribute(PROD_DEFINITION_TYPE,wrapper.getProductDefinitionType());
                 pdsNode.setAttribute(PROD_TIME_NAME, wrapper.getTimeName());
                 pdsNode.setAttribute(PROD_TIME_UNITS, wrapper.getTimeUnits());
                 pdsNode.setAttribute(PROD_TIME_VALUES, wrapper.getTimeValues(imageIndex));

@@ -41,7 +41,7 @@ import ucar.nc2.iosp.hdf4.H4iosp;
 public abstract class HDF4ImageReaderSpi extends ImageReaderSpi {
 
 	static{
-		NetcdfDataset.setDefaultEnhanceMode(EnumSet.of(Enhance.CoordSystems));
+//		NetcdfDataset.setDefaultEnhanceMode(EnumSet.of(Enhance.CoordSystems));
 	}
 
     private static final Logger LOGGER = Logger.getLogger(HDF4ImageReaderSpi.class.toString());

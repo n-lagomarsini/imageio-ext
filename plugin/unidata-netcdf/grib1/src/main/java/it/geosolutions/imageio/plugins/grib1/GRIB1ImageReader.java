@@ -497,7 +497,7 @@ public class GRIB1ImageReader extends BaseImageReader {
                 for (final Variable variable : variables) {
                     if (variable != null && variable instanceof VariableDS) {
                         if (!NetCDFUtilities.isVariableAccepted(variable,CheckType.NONE)){
-                        	if (variable.getName().equalsIgnoreCase(NetCDFUtilities.COORDSYS)){
+                        	if (variable.getFullName().equalsIgnoreCase(NetCDFUtilities.COORDSYS)){
                         		horizontalGrid = variable;
                         	}
                         	continue;

@@ -549,7 +549,7 @@ public class NetCDFUtilities {
             if (dataType == DataType.CHAR) {
                 return false;
             }
-            return isVariableAccepted(var.getName(), CheckType.NONE);
+            return isVariableAccepted(var.getFullName(), CheckType.NONE);
         } else if (checkType == CheckType.ONLYGEOGRIDS) {
             List<Dimension> dimensions = var.getDimensions();
             if (dimensions.size()<2) {
@@ -577,9 +577,9 @@ public class NetCDFUtilities {
             if (dataType == DataType.CHAR) {
                 return false;
             }
-            return isVariableAccepted(var.getName(), CheckType.NONE);
+            return isVariableAccepted(var.getFullName(), CheckType.NONE);
         } else
-            return isVariableAccepted(var.getName(), checkType);
+            return isVariableAccepted(var.getFullName(), checkType);
     }
 
 

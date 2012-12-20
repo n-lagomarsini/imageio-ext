@@ -69,19 +69,35 @@ public class GRIB1Utilities {
 				Transparency.OPAQUE); // transparency
 	}
 
-	final static String GRIB_PARAM_PREFIX = "GRIB_param_";
+// GRIB Params based on NetCDF 4.0.41 and grib 6 
+//	final static String GRIB_PARAM_PREFIX = "GRIB_param_";
+//
+//	final static String GRIB_PARAM_NUMBER = "GRIB_param_number";
+//
+//	final static String GRIB_TABLE_ID = "GRIB_table_id";
+//
+//	final static String GRIB_PARAM_NAME = "GRIB_param_name";
+//
+//	final static String GRIB_PRODUCT_DEFINITION_TYPE = "GRIB_product_definition_type";
+//
+//	final static String GRIB_PARAM_CENTER_ID = "GRIB_center_id";
+//
+//	final static String GRIB_LEVEL_TYPE = "GRIB_level_type";
 
-	final static String GRIB_PARAM_NUMBER = "GRIB_param_number";
-
-	final static String GRIB_TABLE_ID = "GRIB_table_id";
-
-	final static String GRIB_PARAM_NAME = "GRIB_param_name";
-
-	final static String GRIB_PRODUCT_DEFINITION_TYPE = "GRIB_product_definition_type";
-
-	final static String GRIB_PARAM_CENTER_ID = "GRIB_center_id";
-
-	final static String GRIB_LEVEL_TYPE = "GRIB_level_type";
+	
+    final static String GRIB_PARAM_PREFIX = "Grib1_";
+    
+    final static String GRIB_PARAM_NUMBER = "Grib1_Parameter";
+    
+    final static String GRIB_TABLE_ID = "Grib1_TableVersion";
+    
+    final static String GRIB_PARAM_NAME = "Grib1_Parameter_Name";
+    
+    final static String GRIB_PRODUCT_DEFINITION_TYPE = "GRIB_product_definition_type";
+    
+    final static String GRIB_PARAM_CENTER_ID = "Grib1_Center";
+    
+    final static String GRIB_LEVEL_TYPE = "Grib1_Level_Type";
 
 	final static String GRIB_PARAM_UNIT = NetCDFUtilities.UNITS;
 

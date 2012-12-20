@@ -41,7 +41,8 @@ import ucar.nc2.dataset.NetcdfDataset.Enhance;
 public class NetCDFImageReaderSpi extends ImageReaderSpi {
 
 	static{
-		NetcdfDataset.setDefaultEnhanceMode(EnumSet.of(Enhance.CoordSystems));
+	    // The setDefault mode seems no more available in the API, although it's still documented.
+//		NetcdfDataset.setDefaultEnhanceMode(EnumSet.of(Enhance.CoordSystems));
 	}
 	
     /** Default Logger * */

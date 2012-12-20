@@ -35,14 +35,14 @@ public abstract class BaseVariableWrapper {
     private int tileWidth;
 
     private int rank;
-    
+
     private int numBands;
-    
+
     private SampleModel sampleModel;
 
     public void setSampleModel(SampleModel sampleModel) {
-		this.sampleModel = sampleModel;
-	}
+        this.sampleModel = sampleModel;
+    }
 
     public BaseVariableWrapper(Variable variable) {
         this.variable = variable;
@@ -52,7 +52,7 @@ public abstract class BaseVariableWrapper {
         numBands = rank>2?variable.getDimension(2).getLength():1;
         tileHeight = height;
         tileWidth = width;
-        name = variable.getName();
+        name = variable.getFullName();
     }
 
     public int getHeight() {
@@ -81,13 +81,13 @@ public abstract class BaseVariableWrapper {
     }
     
     public void setTileHeight(int tileHeight) {
-		this.tileHeight = tileHeight;
-	}
-
-	public void setTileWidth(int tileWidth) {
-		this.tileWidth = tileWidth;
-	}
-
+        this.tileHeight = tileHeight;
+    }
+    
+    public void setTileWidth(int tileWidth) {
+        this.tileWidth = tileWidth;
+    }
+    
     public Variable getVariable() {
         return variable;
     }
