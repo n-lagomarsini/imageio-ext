@@ -37,50 +37,105 @@ import org.junit.Test;
 
 public class TIFFWriteTest3 {
 
+/*
+ * This test-class is used for testing if the compression tag is set to "LZW" in
+ * the Metadata associated to the LZW-compressed file.
+ */
 @Test
 public void testwriteImage_and_watch_flag() throws IOException {
-
+    // Creation of the input file to read and the output file to write
     final File inputFile = TestData.file(this, "test.tif");
     final File outputFile = TestData.temp(this, "testw.tif", true);
-
+    // Instantiation of the read-params
     final TIFFImageReadParam param = new TIFFImageReadParam();
+    // Instantiation of the file-reader
     TIFFImageReader reader = (TIFFImageReader) new TIFFImageReaderSpi()
             .createReaderInstance();
-
+    // Instantiation of the file-writer
     final TIFFImageWriter writer = (TIFFImageWriter) new TIFFImageWriterSpi()
             .createWriterInstance();
+    // Instantiation of the write-params
     final ImageWriteParam writeParam = new TIFFImageWriteParam(
             Locale.getDefault());
+    // Selection of the compression mode and type
     writeParam.setCompressionMode(ImageWriteParam.MODE_EXPLICIT);
     writeParam.setCompressionType("LZW");
-
+    // Choice of the image index
     int img_index = 0;
+    // Instantiation of the imageinputstream and imageoutputstrem
+    FileImageInputStream stream_in = new FileImageInputStream(inputFile);
+    FileImageOutputStream stream_out = new FileImageOutputStream(outputFile);
+    FileImageInputStream stream_in2 = new FileImageInputStream(outputFile);
 
     try {
-        reader.setInput(new FileImageInputStream(inputFile));
-
+        // Setting the inputstream to the reader
+        reader.setInput(stream_in);
+        // Creation of a buffered image to store the image
         BufferedImage image = reader.read(0, param);
-        writer.setOutput(new FileImageOutputStream(outputFile));
-
+        // Setting the outputstream to the writer
+        writer.setOutput(stream_out);
+        // Writing
         writer.write(null, new IIOImage(image, null, null), writeParam);
-
+        // Disposing of the writer
         writer.dispose();
-
-    } finally {
+        // Restoring the reader to the initial state
         reader.reset();
-        writer.reset();
-    }
-
-    try {
+        // Selecting the tag related to the field "compression"
         int tag_num = 259;
-        reader.setInput(new FileImageInputStream(outputFile));
+        /*
+         * Setting the new inputstream to the reader for reading the written
+         * file
+         */
+        reader.setInput(stream_in2);
+        // Getting the Metadata associated to the image
         TIFFImageMetadata metatest = (TIFFImageMetadata) reader
                 .getImageMetadata(img_index);
+        // Getting the value of the selected TAG
         TIFFField field1 = metatest.getTIFFField(tag_num);
         int value_compression = field1.getAsInt(0);
+        /*
+         * Comparison for evaluating if the type of compression is equal to the
+         * expected one
+         */
         Assert.assertEquals("Not Equal", 5, value_compression);
     } finally {
-        reader.reset();
+        /*
+         * All the readers, writers, and stream are closed even if the program
+         * throws an exception
+         */
+        try {
+            if (stream_in != null)
+                stream_in.flush();
+        } catch (Throwable t) {
+            //
+        }
+
+        try {
+            if (stream_out != null)
+                stream_in.flush();
+        } catch (Throwable t) {
+            //
+        }
+
+        try {
+            if (stream_in2 != null)
+                stream_in2.flush();
+        } catch (Throwable t) {
+            //
+        }
+        try {
+            if (reader != null)
+                reader.dispose();
+        } catch (Throwable t) {
+            //
+        }
+
+        try {
+            if (writer != null)
+                writer.dispose();
+        } catch (Throwable t) {
+            //
+        }
     }
 
 }
