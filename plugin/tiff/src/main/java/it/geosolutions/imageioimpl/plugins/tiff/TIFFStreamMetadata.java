@@ -73,7 +73,11 @@
  */
 package it.geosolutions.imageioimpl.plugins.tiff;
 
+import java.io.File;
 import java.nio.ByteOrder;
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.metadata.IIOMetadataNode;
 import javax.imageio.metadata.IIOInvalidTreeException;
@@ -88,6 +92,23 @@ public class TIFFStreamMetadata extends IIOMetadata {
 
     static final String nativeMetadataFormatClassName =
         "it.geosolutions.imageioimpl.plugins.tiff.TIFFStreamMetadataFormat";
+    
+    static final String EXTERNAL_MASK_FILE = "externalMaskFile";
+
+    static final String NUM_OVERVIEWS = "numOverviews";
+
+    static final String NUM_EXTERNAL_MASKS = "numExternalMasks";
+
+    static final String NUM_INTERNAL_MASKS = "numInternalMasks";
+    
+    private static List<String> names = new ArrayList<String>();
+
+    static {
+        names.add(NUM_INTERNAL_MASKS);
+        names.add(NUM_EXTERNAL_MASKS);
+        names.add(NUM_OVERVIEWS);
+        names.add(EXTERNAL_MASK_FILE);
+    }
 
     private static final String bigEndianString =
         ByteOrder.BIG_ENDIAN.toString();
@@ -95,6 +116,8 @@ public class TIFFStreamMetadata extends IIOMetadata {
         ByteOrder.LITTLE_ENDIAN.toString();
 
     public ByteOrder byteOrder = ByteOrder.BIG_ENDIAN;
+    
+    public TiffDatasetLayoutImpl dtLayout = null;
 
     public TIFFStreamMetadata() {
         super(false,
@@ -120,6 +143,27 @@ public class TIFFStreamMetadata extends IIOMetadata {
         byteOrderNode.setAttribute("value", byteOrder.toString());
 
         root.appendChild(byteOrderNode);
+        
+        // Setting Internal Mask number
+        IIOMetadataNode numInternalMasksNode = new IIOMetadataNode(NUM_INTERNAL_MASKS);
+        numInternalMasksNode.setAttribute("value", Integer.valueOf(dtLayout.getNumInternalMasks()).toString());
+        // Setting External Mask number
+        IIOMetadataNode numExternalMasksNode = new IIOMetadataNode(NUM_EXTERNAL_MASKS);
+        numExternalMasksNode.setAttribute("value", Integer.valueOf(dtLayout.getNumExternalMasks()).toString());
+        // Setting Overview number
+        IIOMetadataNode numOverviewsNode = new IIOMetadataNode(NUM_OVERVIEWS);
+        numOverviewsNode.setAttribute("value", Integer.valueOf(dtLayout.getNumOverviews()).toString());
+        // Setting external file path
+        IIOMetadataNode externalMaskFileNode = new IIOMetadataNode(EXTERNAL_MASK_FILE);
+        File file = dtLayout.getExternalMasks();
+        externalMaskFileNode.setAttribute("value", file != null ? file.getAbsolutePath() : "");
+
+        // Setting Child nodes
+        root.appendChild(numInternalMasksNode);
+        root.appendChild(numExternalMasksNode);
+        root.appendChild(numOverviewsNode);
+        root.appendChild(externalMaskFileNode);
+        
         return root;
     }
 
@@ -166,5 +210,6 @@ public class TIFFStreamMetadata extends IIOMetadata {
 
     public void reset() {
         this.byteOrder = ByteOrder.BIG_ENDIAN;
+        dtLayout = null;
     }
 }
