@@ -10,11 +10,25 @@ import java.io.File;
 public interface DatasetLayout {
 
     /**
-     * Returns the total number of Image overviews
+     * Returns the number of internal Image overviews
      * 
      * @return an Integer indicating how many overviews are present
      */
-    public int getNumOverviews();
+    public int getNumInternalOverviews();
+    
+    /**
+     * Returns the number of external Image overviews
+     * 
+     * @return an Integer indicating how many overviews are present
+     */
+    public int getNumExternalOverviews();
+    
+    /**
+     * Returns the number of external mask overviews
+     * 
+     * @return an Integer indicating how many overviews are present
+     */
+    public int getNumExternalMaskOverviews();
 
     /**
      * Returns the total number of internal Image masks. Notice that If masks are more than one, the others are considered as overviews of the first mask
@@ -37,7 +51,7 @@ public interface DatasetLayout {
      * @param overviewIndex Integer defining a general overview index
      * @return The Overview index related to the imageIndex defined
      */
-    public int getOverviewImageIndex(int overviewIndex);
+    public int getInternalOverviewImageIndex(int overviewIndex);
 
     /**
      * Returns the Mask index associated to the input image index defined. This is helpful when we have overviews and masks and we are unable to
@@ -54,11 +68,18 @@ public interface DatasetLayout {
      * @return a {@link File} containing external masks associated to an input {@link File}
      */
     public File getExternalMasks();
+    
+    /**
+     * This methods returns a File containing external overviews associated to input Image, or <code>null</code> if not present.
+     * 
+     * @return a {@link File} containing external overviews associated to an input {@link File}
+     */
+    public File getExternalOverviews();
 
     /**
-     * This method checks if input image has external masks, which may be taken from the {@link File} returned by <code>getExternalOverviews()</code>.
+     * This methods returns a File containing external overviews associated to external Image masks, or <code>null</code> if not present.
      * 
-     * @return a {@link Boolean} indicating whether external masks are present.
+     * @return a {@link File} containing external mask overviews associated to an input {@link File}
      */
-    public boolean hasExternalMasks();
+    public File getExternalMaskOverviews();
 }

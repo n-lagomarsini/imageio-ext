@@ -90,6 +90,7 @@ import javax.imageio.metadata.IIOMetadataFormat;
 
 public class TIFFStreamMetadataFormat extends TIFFMetadataFormat {
 
+    private static final String VALUE = "/value";
     private static TIFFStreamMetadataFormat theInstance = null;
 
     public boolean canNodeAppear(String elementName,
@@ -108,21 +109,85 @@ public class TIFFStreamMetadataFormat extends TIFFMetadataFormat {
         String[] childNames;
         String[] attrNames;
 
-        childNames = new String[] { "ByteOrder" };
+        childNames = new String[] { TIFFStreamMetadata.BYTE_ORDER, 
+                TIFFStreamMetadata.NUM_INTERNAL_MASKS, 
+                TIFFStreamMetadata.NUM_EXTERNAL_MASKS,
+                TIFFStreamMetadata.NUM_INTERNAL_OVERVIEWS,
+                TIFFStreamMetadata.NUM_EXTERNAL_OVERVIEWS,
+                TIFFStreamMetadata.NUM_EXTERNAL_MASK_OVERVIEWS,
+                TIFFStreamMetadata.EXTERNAL_MASK_FILE,
+                TIFFStreamMetadata.EXTERNAL_OVERVIEW_FILE,
+                TIFFStreamMetadata.EXTERNAL_MASK_OVERVIEW_FILE};
         einfo = new TIFFElementInfo(childNames, empty, CHILD_POLICY_ALL);
 
         elementInfoMap.put(TIFFStreamMetadata.nativeMetadataFormatName,
                            einfo);
 
         childNames = empty;
-        attrNames = new String[] { "value" };
+        attrNames = new String[] { TIFFStreamMetadata.BYTE_ORDER};
         einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
         elementInfoMap.put("ByteOrder", einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.NUM_INTERNAL_MASKS, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.NUM_EXTERNAL_MASKS, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.NUM_INTERNAL_OVERVIEWS, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.NUM_EXTERNAL_OVERVIEWS, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.NUM_EXTERNAL_MASK_OVERVIEWS, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.EXTERNAL_MASK_FILE, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.EXTERNAL_OVERVIEW_FILE, einfo);
+        einfo = new TIFFElementInfo(childNames, attrNames, CHILD_POLICY_EMPTY);
+        elementInfoMap.put(TIFFStreamMetadata.EXTERNAL_MASK_OVERVIEW_FILE, einfo);
 
         ainfo = new TIFFAttrInfo();
         ainfo.dataType = DATATYPE_STRING;
         ainfo.isRequired = true;
-        attrInfoMap.put("ByteOrder/value", ainfo);
+        attrInfoMap.put(TIFFStreamMetadata.BYTE_ORDER + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_INTEGER;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.NUM_INTERNAL_MASKS + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_INTEGER;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.NUM_EXTERNAL_MASKS + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_INTEGER;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.NUM_INTERNAL_OVERVIEWS + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_INTEGER;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.NUM_EXTERNAL_OVERVIEWS + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_INTEGER;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.NUM_EXTERNAL_MASK_OVERVIEWS + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_STRING;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.EXTERNAL_MASK_FILE + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_STRING;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.EXTERNAL_OVERVIEW_FILE + VALUE, ainfo);
+        
+        ainfo = new TIFFAttrInfo();
+        ainfo.dataType = DATATYPE_STRING;
+        ainfo.isRequired = false;
+        attrInfoMap.put(TIFFStreamMetadata.EXTERNAL_MASK_OVERVIEW_FILE + VALUE, ainfo);
     }
 
     public static synchronized IIOMetadataFormat getInstance() {

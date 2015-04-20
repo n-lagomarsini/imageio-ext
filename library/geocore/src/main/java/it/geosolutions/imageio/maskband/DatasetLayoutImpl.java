@@ -9,7 +9,15 @@ import java.io.File;
  */
 public abstract class DatasetLayoutImpl implements DatasetLayout {
 
-    public int getNumOverviews() {
+    public int getNumInternalOverviews() {
+        return 0;
+    }
+    
+    public int getNumExternalOverviews(){
+        return 0;
+    }
+    
+    public int getNumExternalMaskOverviews(){
         return 0;
     }
 
@@ -21,7 +29,7 @@ public abstract class DatasetLayoutImpl implements DatasetLayout {
         return 0;
     }
 
-    public int getOverviewImageIndex(int overviewIndex) {
+    public int getInternalOverviewImageIndex(int overviewIndex) {
         return overviewIndex;
     }
 
@@ -32,8 +40,12 @@ public abstract class DatasetLayoutImpl implements DatasetLayout {
     public File getExternalMasks() {
         return null;
     }
+    
+    public File getExternalOverviews(){
+        return null;
+    }
 
-    public boolean hasExternalMasks() {
-        return false;
+    public File getExternalMaskOverviews(){
+        return null;
     }
 }

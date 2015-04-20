@@ -287,6 +287,8 @@ public class TIFFImageReader extends ImageReader {
     private static final boolean DEBUG = false; // XXX 'false' for release!!!
 
     private static final String MASK_SUFFIX = ".msk";
+    
+    private static final String OVR_SUFFIX = ".ovr";
 
     private int magic = -1;
     
@@ -367,10 +369,12 @@ public class TIFFImageReader extends ImageReader {
 
     // BAND MASK RELATED FIELDS
     private TiffDatasetLayoutImpl layout;
-
-    private boolean hasExternalMask = false;
     
     private File externalMask;
+    
+    private File externalOverviews;
+
+    private File maskOverviews;
 
     public TIFFImageReader(ImageReaderSpi originatingProvider) {
         super(originatingProvider);
@@ -390,21 +394,32 @@ public class TIFFImageReader extends ImageReader {
                     ("input not an ImageInputStream!"); 
             }
             this.stream = (ImageInputStream)input;
-            // Check for external masks
-            if(input instanceof FileImageInputStreamExtImpl){
-                
-                FileImageInputStreamExtImpl stream = (FileImageInputStreamExtImpl)input;
+            // Check for external masks/overviews
+            if (input instanceof FileImageInputStreamExtImpl) {
+
+                FileImageInputStreamExtImpl stream = (FileImageInputStreamExtImpl) input;
                 // Getting File path
                 File inputFile = stream.getFile();
-                if(inputFile != null){
+                if (inputFile != null) {
                     // Getting Parent
                     File parent = inputFile.getParentFile();
                     // Getting Mask file name
                     File mask = new File(parent, inputFile.getName() + MASK_SUFFIX);
                     // Check if exists and can be read
-                    if(mask.exists() && mask.canRead()){
-                        hasExternalMask = true;
+                    if (mask.exists() && mask.canRead()) {
                         externalMask = mask;
+                        // Getting external Mask Overviews
+                        File mskOverviews = new File(mask.getAbsolutePath() + OVR_SUFFIX);
+                        // Check if the file exists and can be read
+                        if (mskOverviews.exists() && mskOverviews.canRead()) {
+                            maskOverviews = mskOverviews;
+                        }
+                    }
+                    // Getting Overviews file name
+                    File ovr = new File(parent, inputFile.getName() + OVR_SUFFIX);
+                    // Check if exists and can be read
+                    if (ovr.exists() && ovr.canRead()) {
+                        externalOverviews = ovr;
                     }
                 }
             }
@@ -491,7 +506,7 @@ public class TIFFImageReader extends ImageReader {
     }
 
     private void defineDatasetLayout() throws IIOException {
-        if (!(layout.getNumOverviews() == -1 && layout.getNumInternalMasks() == -1)) {
+        if (!(layout.getNumInternalOverviews() == -1 && layout.getNumInternalMasks() == -1)) {
             return;
         }
         // Initialize
@@ -506,6 +521,7 @@ public class TIFFImageReader extends ImageReader {
         // Extracting the TIFF Tag NewSubfileType from each Image
         int numOverviews = 0;
         int numMasks = 0;
+        int numMaskOverView = 0;
         // If not all the Images Metadata have been loaded, loop through images in order to add them
         // if(pagesInfo != null && (numImg != pagesInfo.size())){
         // Getting current Index which will be restored at the end of the operation
@@ -524,12 +540,15 @@ public class TIFFImageReader extends ImageReader {
             if (f != null) {
                 Object data = f.getData();
                 // Checking if the data is LONG
-                if (data instanceof Long) {
-                    long ldata = (Long) data;
+                if (data instanceof long[]) {
+                    long ldata = ((long[]) data)[0];
                     numMasks += ((ldata & BaselineTIFFTagSet.NEW_SUBFILE_TYPE_TRANSPARENCY) > 0) ? 1
                             : 0;
                     numOverviews += ((ldata & BaselineTIFFTagSet.NEW_SUBFILE_TYPE_REDUCED_RESOLUTION) > 0) ? 1
                             : 0;
+                    numMaskOverView += ((ldata & BaselineTIFFTagSet.NEW_SUBFILE_TYPE_REDUCED_RESOLUTION) > 0 && (ldata & BaselineTIFFTagSet.NEW_SUBFILE_TYPE_TRANSPARENCY) > 0) ? 1
+                            : 0;
+                    
                 }
             }
         }
@@ -537,44 +556,66 @@ public class TIFFImageReader extends ImageReader {
         seekToImage(currentIdx);
         // Setting Masks number and Overviews number
         layout.setNumInternalMasks(numMasks);
-        layout.setNumOverviews(numOverviews);
+        layout.setNumInternalOverviews(numOverviews - numMaskOverView);
     }
 
     private void defineExternalMasks() throws IIOException {
-        if (!hasExternalMask || layout.hasExternalMasks()) {
+        // Check if already initialized
+        if ((externalMask == null || layout.getExternalMasks() != null)
+                && (maskOverviews == null || layout.getExternalMaskOverviews() != null)
+                && (externalOverviews == null || layout.getExternalOverviews() != null)) {
             return;
         }
         // Initialize
         readHeader();
+        // Setting Values to the DatasetLayout
+        layout.setExternalMasks(externalMask);
+        layout.setExternalMaskOverviews(maskOverviews);
+        layout.setExternalOverviews(externalOverviews);
+        layout.setNumExternalMasks(getNumImages(externalMask));
+        layout.setNumExternalMaskOverviews(getNumImages(maskOverviews));
+        layout.setNumExternalOverviews(getNumImages(externalOverviews));
+    }
+    
+    private int getNumImages(File inputFile) throws IIOException {
+        // Init value to 0
+        int numImg = 0;
         // Creating a new TIFFImageReader instance for reading
         ImageReader reader = null;
         // Initializing a null stream
         FileImageInputStreamExtImpl stream = null;
-        // Initial value for External masks
-        int externalMasksNum = 0;
-        try {
-            // Getting mask data stream
-            stream = new FileImageInputStreamExtImpl(externalMask);
-            // Creating the Reader
-            reader = originatingProvider.createReaderInstance();
-            reader.setInput(stream);
-            // Getting the image number (Indicates the Mask number)
-            externalMasksNum = reader.getNumImages(true);
-        } catch (IOException e) {
-            throw new IIOException("Unable to open input .msk file", e);
-        } finally {
-            // Closing stream
-            if (stream != null) {
-                try {
-                    stream.close();
-                } catch (Exception e) {
-                    // Eat the Exception
+        // Searching for external Overviews
+        if (inputFile != null) {
+            try {
+                // Getting mask data stream
+                stream = new FileImageInputStreamExtImpl(inputFile);
+                // Creating the Reader
+                reader = originatingProvider.createReaderInstance();
+                reader.setInput(stream);
+                // Getting the image number (Indicates the Mask number)
+                numImg = reader.getNumImages(true);
+            } catch (IOException e) {
+                throw new IIOException("Unable to open input .msk file", e);
+            } finally {
+                // Closing reader
+                if (reader != null) {
+                    try {
+                        reader.dispose();
+                    } catch (Exception e) {
+                        // Eat the Exception
+                    }
+                }
+                // Closing stream
+                if (stream != null) {
+                    try {
+                        stream.close();
+                    } catch (Exception e) {
+                        // Eat the Exception
+                    }
                 }
             }
         }
-        // Setting External Masks to the DatasetLayout
-        layout.setExternalMasks(externalMask);
-        layout.setNumExternalMasks(externalMasksNum);
+        return numImg;
     }
     
     private int locateImage(int imageIndex) throws IIOException {
@@ -667,6 +708,12 @@ public class TIFFImageReader extends ImageReader {
 
     public IIOMetadata getStreamMetadata() throws IIOException {
         readHeader();
+        // Defining DatasetLayout
+        defineDatasetLayout();
+        // Defining External Masks
+        defineExternalMasks();
+        // Setting the Layout
+        streamMetadata.dtLayout = layout;
         return streamMetadata;
     }
 

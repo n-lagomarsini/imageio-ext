@@ -15,9 +15,13 @@
  */
 package it.geosolutions.imageio.tiff;
 
+import it.geosolutions.imageio.stream.input.FileImageInputStreamExt;
+import it.geosolutions.imageio.stream.input.FileImageInputStreamExtImpl;
 import it.geosolutions.imageio.utilities.ImageIOUtilities;
 import it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReader;
 import it.geosolutions.imageioimpl.plugins.tiff.TIFFImageReaderSpi;
+import it.geosolutions.imageioimpl.plugins.tiff.TIFFStreamMetadata;
+import it.geosolutions.imageioimpl.plugins.tiff.TIFFStreamMetadata.MetadataNode;
 import it.geosolutions.resources.TestData;
 
 import java.awt.Rectangle;
@@ -25,15 +29,19 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RenderedImage;
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteOrder;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import javax.imageio.ImageReadParam;
+import javax.imageio.metadata.IIOMetadata;
 import javax.imageio.stream.FileImageInputStream;
 import javax.media.jai.PlanarImage;
 
 import org.junit.Assert;
 import org.junit.Test;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 import com.sun.media.jai.operator.ImageReadDescriptor;
 
@@ -259,6 +267,292 @@ public class TIFFReadTest extends Assert {
 			if (reader != null) {
 				reader.dispose();
 			}
+        }
+    }
+    
+    @Test
+    public void readMasks() throws IOException {
+
+        final File file = TestData.file(this, "masks.tif");
+
+        final ImageReadParam param = new ImageReadParam();
+        param.setSourceRegion(new Rectangle(0, 0, 2, 2));
+
+        final TIFFImageReader reader = (TIFFImageReader) new TIFFImageReaderSpi()
+                .createReaderInstance();
+
+        FileImageInputStream inputStream = new FileImageInputStream(file);
+        try {
+            reader.setInput(inputStream);
+            // IMAGE 0
+            BufferedImage image = reader.read(0, param);
+            Assert.assertEquals(2, image.getWidth());
+            Assert.assertEquals(2, image.getHeight());
+            image.flush();
+            image = null;
+
+            // Getting Stream Metadata
+            IIOMetadata metadata = reader.getStreamMetadata();
+            Node tree = metadata.getAsTree("com_sun_media_imageio_plugins_tiff_stream_1.0");
+            // Ensuring not null
+            Assert.assertNotNull(tree);
+
+            // Checking Childs
+            NodeList list = tree.getChildNodes();
+            int len = list.getLength();
+
+            for (int i = 0; i < len; i++) {
+
+                Node node = list.item(i);
+                // Ensuring not null
+                Assert.assertNotNull(node);
+                // Getting the name
+                String nodeName = node.getNodeName();
+                // Checking attributes
+                Assert.assertTrue(node.hasAttributes());
+                // Getting Attribute Value
+                String value = node.getAttributes().item(0).getNodeValue();
+                // Getting related enum
+                MetadataNode mnode = MetadataNode.getFromName(nodeName);
+                // Checking Attribute value
+                switch (mnode) {
+                case B_ORDER:
+                    Assert.assertTrue(value.equalsIgnoreCase(ByteOrder.LITTLE_ENDIAN.toString()));
+                    break;
+                case N_INT_MASK:
+                    Assert.assertEquals(5, Integer.parseInt(value));
+                    break;
+                case N_EXT_MASK:
+                    Assert.assertEquals(-1, Integer.parseInt(value));
+                    break;
+                case N_INT_OVR:
+                    Assert.assertEquals(4, Integer.parseInt(value));
+                    break;
+                case N_EXT_OVR:
+                    Assert.assertEquals(-1, Integer.parseInt(value));
+                    break;
+                case N_EXT_OVR_MASK:
+                    Assert.assertEquals(-1, Integer.parseInt(value));
+                    break;
+                case EXT_MASK_FILE:
+                    Assert.assertTrue(value.isEmpty());
+                    break;
+                case EXT_OVR_FILE:
+                    Assert.assertTrue(value.isEmpty());
+                    break;
+                case EXT_OVR_MASK_FILE:
+                    Assert.assertTrue(value.isEmpty());
+                    break;
+                default:
+                    // Wrong element
+                    Assert.assertTrue(false);
+                }
+            }
+        } catch (Exception e) {
+            // If an exception occurred the logger catch the exception and print
+            // the message
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            // Finally, if an exception has been thrown or not, the reader
+            // and the input stream are closed
+            if (inputStream != null) {
+                inputStream.flush();
+                inputStream.close();
+            }
+
+            if (reader != null) {
+                reader.dispose();
+            }
+        }
+    }
+    
+    @Test
+    public void readExternalMasks() throws IOException {
+
+        final File file = TestData.file(this, "external.tif");
+
+        final ImageReadParam param = new ImageReadParam();
+        param.setSourceRegion(new Rectangle(0, 0, 2, 2));
+
+        final TIFFImageReader reader = (TIFFImageReader) new TIFFImageReaderSpi()
+                .createReaderInstance();
+
+        FileImageInputStreamExt inputStream = new FileImageInputStreamExtImpl(file);
+        try {
+            reader.setInput(inputStream);
+            // IMAGE 0
+            BufferedImage image = reader.read(0, param);
+            Assert.assertEquals(2, image.getWidth());
+            Assert.assertEquals(2, image.getHeight());
+            image.flush();
+            image = null;
+
+            // Getting Stream Metadata
+            IIOMetadata metadata = reader.getStreamMetadata();
+            Node tree = metadata.getAsTree("com_sun_media_imageio_plugins_tiff_stream_1.0");
+            // Ensuring not null
+            Assert.assertNotNull(tree);
+
+            // Checking Childs
+            NodeList list = tree.getChildNodes();
+            int len = list.getLength();
+
+            for (int i = 0; i < len; i++) {
+                Node node = list.item(i);
+                // Ensuring not null
+                Assert.assertNotNull(node);
+                // Getting the name
+                String nodeName = node.getNodeName();
+                // Checking attributes
+                Assert.assertTrue(node.hasAttributes());
+                // Getting Attribute Value
+                String value = node.getAttributes().item(0).getNodeValue();
+                // Getting related enum
+                MetadataNode mnode = MetadataNode.getFromName(nodeName);
+                // Checking Attribute value
+                switch (mnode) {
+                case B_ORDER:
+                    Assert.assertTrue(value.equalsIgnoreCase(ByteOrder.LITTLE_ENDIAN.toString()));
+                    break;
+                case N_INT_MASK:
+                    Assert.assertEquals(0, Integer.parseInt(value));
+                    break;
+                case N_EXT_MASK:
+                    Assert.assertEquals(5, Integer.parseInt(value));
+                    break;
+                case N_INT_OVR:
+                    Assert.assertEquals(4, Integer.parseInt(value));
+                    break;
+                case N_EXT_OVR:
+                    Assert.assertEquals(0, Integer.parseInt(value));
+                    break;
+                case N_EXT_OVR_MASK:
+                    Assert.assertEquals(0, Integer.parseInt(value));
+                    break;
+                case EXT_MASK_FILE:
+                    Assert.assertTrue(value.contains("external.tif.msk"));
+                    break;
+                case EXT_OVR_FILE:
+                    Assert.assertTrue(value.isEmpty());
+                    break;
+                case EXT_OVR_MASK_FILE:
+                    Assert.assertTrue(value.isEmpty());
+                    break;
+                default:
+                    // Wrong element
+                    Assert.assertTrue(false);
+                }
+            }
+        } catch (Exception e) {
+            // If an exception occurred the logger catch the exception and print
+            // the message
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            // Finally, if an exception has been thrown or not, the reader
+            // and the input stream are closed
+            if (inputStream != null) {
+                inputStream.flush();
+                inputStream.close();
+            }
+
+            if (reader != null) {
+                reader.dispose();
+            }
+        }
+    }
+    
+    @Test
+    public void readExternalMasksOvr() throws IOException {
+
+        final File file = TestData.file(this, "external2.tif");
+
+        final ImageReadParam param = new ImageReadParam();
+        param.setSourceRegion(new Rectangle(0, 0, 2, 2));
+
+        final TIFFImageReader reader = (TIFFImageReader) new TIFFImageReaderSpi()
+                .createReaderInstance();
+
+        FileImageInputStreamExt inputStream = new FileImageInputStreamExtImpl(file);
+        try {
+            reader.setInput(inputStream);
+            // IMAGE 0
+            BufferedImage image = reader.read(0, param);
+            Assert.assertEquals(2, image.getWidth());
+            Assert.assertEquals(2, image.getHeight());
+            image.flush();
+            image = null;
+
+            // Getting Stream Metadata
+            IIOMetadata metadata = reader.getStreamMetadata();
+            Node tree = metadata.getAsTree("com_sun_media_imageio_plugins_tiff_stream_1.0");
+            // Ensuring not null
+            Assert.assertNotNull(tree);
+
+            // Checking Childs
+            NodeList list = tree.getChildNodes();
+            int len = list.getLength();
+
+            for (int i = 0; i < len; i++) {
+                Node node = list.item(i);
+                // Ensuring not null
+                Assert.assertNotNull(node);
+                // Getting the name
+                String nodeName = node.getNodeName();
+                // Checking attributes
+                Assert.assertTrue(node.hasAttributes());
+                // Getting Attribute Value
+                String value = node.getAttributes().item(0).getNodeValue();
+                // Getting related enum
+                MetadataNode mnode = MetadataNode.getFromName(nodeName);
+                // Checking Attribute value
+                switch (mnode) {
+                case B_ORDER:
+                    Assert.assertTrue(value.equalsIgnoreCase(ByteOrder.LITTLE_ENDIAN.toString()));
+                    break;
+                case N_INT_MASK:
+                    Assert.assertEquals(0, Integer.parseInt(value));
+                    break;
+                case N_EXT_MASK:
+                    Assert.assertEquals(1, Integer.parseInt(value));
+                    break;
+                case N_INT_OVR:
+                    Assert.assertEquals(0, Integer.parseInt(value));
+                    break;
+                case N_EXT_OVR:
+                    Assert.assertEquals(0, Integer.parseInt(value));
+                    break;
+                case N_EXT_OVR_MASK:
+                    Assert.assertEquals(4, Integer.parseInt(value));
+                    break;
+                case EXT_MASK_FILE:
+                    Assert.assertTrue(value.contains("external2.tif.msk"));
+                    break;
+                case EXT_OVR_FILE:
+                    Assert.assertTrue(value.isEmpty());
+                    break;
+                case EXT_OVR_MASK_FILE:
+                    Assert.assertTrue(value.contains("external2.tif.msk.ovr"));
+                    break;
+                default:
+                    // Wrong element
+                    Assert.assertTrue(false);
+                }
+            }
+        } catch (Exception e) {
+            // If an exception occurred the logger catch the exception and print
+            // the message
+            logger.log(Level.SEVERE, e.getMessage(), e);
+        } finally {
+            // Finally, if an exception has been thrown or not, the reader
+            // and the input stream are closed
+            if (inputStream != null) {
+                inputStream.flush();
+                inputStream.close();
+            }
+
+            if (reader != null) {
+                reader.dispose();
+            }
         }
     }
 }
