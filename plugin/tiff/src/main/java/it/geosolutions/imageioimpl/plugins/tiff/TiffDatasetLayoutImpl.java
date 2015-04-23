@@ -48,10 +48,13 @@ public class TiffDatasetLayoutImpl extends DatasetLayoutImpl implements DatasetL
     }
 
     public int getInternalOverviewImageIndex(int overviewIndex) {
+        if(overviewIndex == 0){
+            return overviewIndex;
+        }
         if (numInternalOverviews <= 0 || overviewIndex >= numInternalOverviews) {
             return -1;
         }
-        int index = 1;
+        int index = 0;
         if (numInternalMasks > 0) {
             index++;
         }
