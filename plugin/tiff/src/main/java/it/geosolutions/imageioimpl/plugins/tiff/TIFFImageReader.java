@@ -46,7 +46,7 @@
  *    ImageI/O-Ext - OpenSource Java Image translation Library
  *    http://www.geo-solutions.it/
  *    http://java.net/projects/imageio-ext/
- *    (C) 2007 - 2009, GeoSolutions
+ *    (C) 2007 - 2015, GeoSolutions
  *    All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -73,6 +73,7 @@
  */
 package it.geosolutions.imageioimpl.plugins.tiff;
 
+import it.geosolutions.imageio.maskband.DatasetLayout;
 import it.geosolutions.imageio.plugins.tiff.BaselineTIFFTagSet;
 import it.geosolutions.imageio.plugins.tiff.TIFFColorConverter;
 import it.geosolutions.imageio.plugins.tiff.TIFFDecompressor;
@@ -286,8 +287,10 @@ public class TIFFImageReader extends ImageReader {
 
     private static final boolean DEBUG = false; // XXX 'false' for release!!!
 
+    /** Constant Value for External Mask suffix*/
     private static final String MASK_SUFFIX = ".msk";
-    
+
+    /** Constant Value for External Overview suffix*/
     private static final String OVR_SUFFIX = ".ovr";
 
     private int magic = -1;
@@ -368,12 +371,16 @@ public class TIFFImageReader extends ImageReader {
     private boolean isImageTiled= false;
 
     // BAND MASK RELATED FIELDS
+    /** {@link DatasetLayout} implementation containing info about overviews and masks*/
     private TiffDatasetLayoutImpl layout;
-    
+
+    /** External File containing TIFF masks*/
     private File externalMask;
-    
+
+    /** External File containing TIFF Overviews*/
     private File externalOverviews;
 
+    /** External File containing TIFF masks overviews*/
     private File maskOverviews;
 
     public TIFFImageReader(ImageReaderSpi originatingProvider) {

@@ -1,9 +1,25 @@
+/*
+ *    ImageI/O-Ext - OpenSource Java Image translation Library
+ *    http://www.geo-solutions.it/
+ *    http://java.net/projects/imageio-ext/
+ *    (C) 2007 - 2015, GeoSolutions
+ *
+ *    This library is free software; you can redistribute it and/or
+ *    modify it under the terms of the GNU Lesser General Public
+ *    License as published by the Free Software Foundation;
+ *    either version 3 of the License, or (at your option) any later version.
+ *
+ *    This library is distributed in the hope that it will be useful,
+ *    but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ *    Lesser General Public License for more details.
+ */
 package it.geosolutions.imageio.maskband;
 
 import java.io.File;
 
 /**
- * Interface defining methods for accessing Internal Image structure
+ * Interface defining methods for accessing Internal Image structure, like overviews, masks and so on
  * 
  * @author Nicola Lagomarsini GeoSolutions S.A.S.
  */
@@ -48,7 +64,7 @@ public interface DatasetLayout {
      * Returns the Overview index associated to the input image index defined. This is helpful when we have overviews and masks and we are unable to
      * distinguish them. If no overwiew is present or the overview index is greater than the maximum index, -1 will be returned.
      * 
-     * @param overviewIndex Integer defining a general overview index
+     * @param overviewIndex Integer defining an image overview index (0 means the native image)
      * @return The Overview index related to the imageIndex defined
      */
     public int getInternalOverviewImageIndex(int overviewIndex);
@@ -57,7 +73,7 @@ public interface DatasetLayout {
      * Returns the Mask index associated to the input image index defined. This is helpful when we have overviews and masks and we are unable to
      * distinguish them. If no mask is present or the mask index is greater than the maximum index, -1 will be returned.
      * 
-     * @param maskIndex Integer defining a general mask index
+     * @param maskIndex Integer defining an image mask index (0 means the native image resolution)
      * @return The Overview index related to the imageIndex defined
      */
     public int getInternalMaskImageIndex(int maskIndex);

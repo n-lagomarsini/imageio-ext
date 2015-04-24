@@ -51,7 +51,7 @@ public class TiffDatasetLayoutImpl extends DatasetLayoutImpl implements DatasetL
         if(overviewIndex == 0){
             return overviewIndex;
         }
-        if (numInternalOverviews <= 0 || overviewIndex >= numInternalOverviews) {
+        if (numInternalOverviews < 0 || overviewIndex > numInternalOverviews) {
             return -1;
         }
         int index = 0;
